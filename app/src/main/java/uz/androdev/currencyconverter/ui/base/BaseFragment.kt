@@ -28,6 +28,8 @@ open class BaseFragment<VB : ViewBinding>(
     private var _binding: VB? = null
     protected val binding get() = _binding!!
 
+    private val onDestroyViewRunnableList = mutableSetOf<Runnable>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,8 +39,14 @@ open class BaseFragment<VB : ViewBinding>(
         return binding.root
     }
 
+    protected fun runOnDestroy(runnable: Runnable) {
+        onDestroyViewRunnableList.add(runnable)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        onDestroyViewRunnableList.forEach { it.run() }
+        onDestroyViewRunnableList.clear()
         _binding = null
     }
 

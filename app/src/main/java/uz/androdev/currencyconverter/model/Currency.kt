@@ -1,5 +1,6 @@
 package uz.androdev.currencyconverter.model
 
+import androidx.recyclerview.widget.DiffUtil
 import org.threeten.bp.LocalDate
 
 /**
@@ -17,4 +18,16 @@ data class Currency(
     val sellPrice: Float?,
     val date: LocalDate,
     val currencyImagePath: String
-)
+) {
+    companion object {
+        val DIFF_UTIL = object : DiffUtil.ItemCallback<Currency>() {
+            override fun areItemsTheSame(oldItem: Currency, newItem: Currency): Boolean {
+                return oldItem.code == newItem.code
+            }
+
+            override fun areContentsTheSame(oldItem: Currency, newItem: Currency): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="16dp">
+
+    <ImageView
+        android:id="@+id/currency_image"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_currency_exchange" />
+
+    <TextView
+        android:id="@+id/currency_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/currency_image"
+        app:layout_constraintStart_toEndOf="@id/currency_image"
+        app:layout_constraintTop_toTopOf="@id/currency_image"
+        tools:text="Usd Dollar, USD" />
+
+    <TextView
+        android:id="@+id/cb_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/buy_price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/currency_info"
+        app:layout_constraintTop_toBottomOf="@id/currency_info"
+        tools:text="Central bank: 18500.0" />
+
+    <TextView
+        android:id="@+id/buy_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/sell_price"
+        app:layout_constraintEnd_toEndOf="@id/cb_price"
+        app:layout_constraintStart_toStartOf="@id/cb_price"
+        app:layout_constraintTop_toBottomOf="@id/cb_price"
+        tools:text="Buy price: 18500.0" />
+
+    <TextView
+        android:id="@+id/sell_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/buy_price"
+        app:layout_constraintStart_toStartOf="@id/buy_price"
+        app:layout_constraintTop_toBottomOf="@id/buy_price"
+        tools:text="Sell price: 18500.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

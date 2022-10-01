@@ -13,13 +13,15 @@ import uz.androdev.currencyconverter.data.exception.ServerErrorException
 
 @kotlin.jvm.Throws(NoInternetConnectionException::class, ServerErrorException::class)
 suspend fun <T : Any> handle(request: suspend () -> Response<T>): T {
-    val response = request()
-    if (!response.isSuccessful) {
-        throw ServerErrorException("Server error occurred!")
-    }
-
     return try {
-        response.body()!!
+        val response = request()
+        if (response.isSuccessful) {
+            response.body()!!
+        } else {
+            throw ServerErrorException("Fetch failed. Check internet connection!")
+        }
+    } catch (e: ServerErrorException) {
+        throw e
     } catch (e: Exception) {
         throw NoInternetConnectionException("Fetch failed. Check internet connection!")
     }
