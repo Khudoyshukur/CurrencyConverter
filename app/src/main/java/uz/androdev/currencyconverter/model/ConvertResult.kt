@@ -12,7 +12,7 @@ import org.threeten.bp.LocalDateTime
 
 data class ConvertResult(
     val dateTime: LocalDateTime = LocalDateTime.now(),
-    val result: String
+    val result: String = ""
 ) {
     companion object {
         val DIFF_UTIL = object : ItemCallback<ConvertResult>() {

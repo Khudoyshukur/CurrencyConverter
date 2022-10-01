@@ -2,6 +2,7 @@ package uz.androdev.currencyconverter.ui.converter
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -39,6 +40,8 @@ class ConverterFragment :
             uiState = viewModel.uiState,
             processAction = viewModel::processAction
         )
+
+        observeMessages()
     }
 
     private fun FragmentConverterBinding.bindContent(
@@ -52,7 +55,7 @@ class ConverterFragment :
         )
 
         bindConvertHistory(
-            isVisible = uiState.map { !it.loadingCurrencies && it.failureToLoadCurrencies != null },
+            isVisible = uiState.map { !it.loadingCurrencies && it.failureToLoadCurrencies == null },
             convertHistory = uiState.map { it.convertHistory }
         )
 
@@ -62,6 +65,18 @@ class ConverterFragment :
             failure = uiState.map { it.failureToLoadCurrencies },
             reload = { processAction(Action.ReloadCurrencies) }
         )
+    }
+
+    private fun observeMessages() {
+        repeatOnViewLifecycle(Lifecycle.State.CREATED) {
+            viewModel.message.collect {
+                when(it){
+                    Message.ConvertResultNotSaved -> {
+                        toast(R.string.convert_result_not_saved_error)
+                    }
+                }
+            }
+        }
     }
 
     private fun FragmentConverterBinding.bindConvertContainer(
@@ -132,11 +147,15 @@ class ConverterFragment :
 
             launch {
                 currentConvertResult.distinctUntilChanged().collectLatest {
-                    tvConvertResult.text = if (it == null) {
-                        ""
-                    } else {
-                        String.format(getString(R.string.search_result), it.result)
+                    tvConvertResult.layoutParams = tvConvertResult.layoutParams.apply {
+                        height = if (it == null) {
+                            0
+                        } else {
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        }
                     }
+                    tvConvertResult.text =
+                        String.format(getString(R.string.search_result), it?.result)
                 }
             }
         }

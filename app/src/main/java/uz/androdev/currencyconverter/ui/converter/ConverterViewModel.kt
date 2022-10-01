@@ -3,11 +3,14 @@ package uz.androdev.currencyconverter.ui.converter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import uz.androdev.currencyconverter.domain.failure.GetCurrenciesUseCaseFailure
 import uz.androdev.currencyconverter.domain.response.UseCaseResponse
+import uz.androdev.currencyconverter.domain.usecase.GetConversionHistoryUseCase
 import uz.androdev.currencyconverter.domain.usecase.GetCurrenciesUseCase
+import uz.androdev.currencyconverter.domain.usecase.SaveConversionResultUseCase
 import uz.androdev.currencyconverter.model.ConvertResult
 import uz.androdev.currencyconverter.model.Currency
 import javax.inject.Inject
@@ -21,25 +24,31 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConverterViewModel @Inject constructor(
-    private val getCurrenciesUseCase: GetCurrenciesUseCase
+    private val getCurrenciesUseCase: GetCurrenciesUseCase,
+    private val getConversionHistoryUseCase: GetConversionHistoryUseCase,
+    private val saveConversionResultUseCase: SaveConversionResultUseCase
 ) : ViewModel() {
     private val currenciesState = MutableStateFlow<List<Currency>>(emptyList())
     private val loadingCurrenciesState = MutableStateFlow(false)
     private val failureToLoadCurrenciesState = MutableStateFlow<GetCurrenciesUseCaseFailure?>(null)
     private val currentConvertResultState = MutableStateFlow<ConvertResult?>(null)
 
+    private val _message = Channel<Message>()
+    val message get() = _message.receiveAsFlow()
+
     val uiState: StateFlow<UiState> = combine(
         currenciesState,
         loadingCurrenciesState,
         failureToLoadCurrenciesState,
-        currentConvertResultState
-    ) { currencies, loadingCurrencies, failureToLoadCurrencies, currentConvertResult ->
+        currentConvertResultState,
+        getConversionHistoryUseCase()
+    ) { currencies, loadingCurrencies, failureToLoadCurrencies, currentConvertResult, history ->
         UiState(
             loadingCurrencies = loadingCurrencies,
             failureToLoadCurrencies = failureToLoadCurrencies,
             currencies = currencies,
             currentConvertResult = currentConvertResult,
-            convertHistory = emptyList()
+            convertHistory = history
         )
     }.stateIn(
         scope = viewModelScope,
@@ -78,6 +87,13 @@ class ConverterViewModel @Inject constructor(
             )
         }
         currentConvertResultState.emit(result)
+
+        when (saveConversionResultUseCase(result)) {
+            is UseCaseResponse.Failure -> {
+                _message.send(Message.ConvertResultNotSaved)
+            }
+            is UseCaseResponse.Success -> {}
+        }
     }
 
     private suspend fun loadCurrencies() {
@@ -102,6 +118,10 @@ class ConverterViewModel @Inject constructor(
 sealed interface Action {
     object ReloadCurrencies : Action
     data class ProcessConversion(val conversion: Conversion) : Action
+}
+
+sealed interface Message {
+    object ConvertResultNotSaved : Message
 }
 
 data class UiState(

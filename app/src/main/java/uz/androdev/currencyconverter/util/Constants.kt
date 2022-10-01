@@ -11,5 +11,5 @@ object Constants {
     const val NBU_API_DATE_FORMAT = "MM/dd/yyyy"
     const val NBU_CURRENCY_IMAGE_PATH_FORMAT = "https://nbu.uz/local/templates/nbu/images/flags/%s.png"
 
-    const val SEARCH_HISTORY_DATE_TIME_FORMAT = "HH:mm dd.MM.yyyy"
+    const val SEARCH_HISTORY_DATE_TIME_FORMAT = "'Date:' dd.MM.yyyy '\n''Time:' HH:mm"
 }

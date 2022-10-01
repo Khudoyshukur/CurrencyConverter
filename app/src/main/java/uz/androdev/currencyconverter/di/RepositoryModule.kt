@@ -4,8 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import uz.androdev.currencyconverter.data.repository.ConversionHistoryRepository
 import uz.androdev.currencyconverter.data.repository.CurrencyRepository
 import uz.androdev.currencyconverter.data.repository.impl.CurrencyRepositoryImpl
+import uz.androdev.currencyconverter.data.repository.impl.FirebaseConversionHistoryRepositoryImpl
 import javax.inject.Singleton
 
 /**
@@ -22,4 +24,15 @@ interface CurrencyRepositoryModule {
     @Singleton
     @Binds
     fun bindCurrencyRepository(impl: CurrencyRepositoryImpl): CurrencyRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+interface ConversionHistoryRepositoryModule {
+
+    @Singleton
+    @Binds
+    fun bindConversionHistoryRepository(
+        impl: FirebaseConversionHistoryRepositoryImpl
+    ): ConversionHistoryRepository
 }

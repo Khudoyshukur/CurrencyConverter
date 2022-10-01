@@ -1,6 +1,8 @@
 package uz.androdev.currencyconverter.app
 
 import android.app.Application
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -12,4 +14,9 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class CurrencyConverterApp : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        Firebase.database.setPersistenceEnabled(true)
+    }
 }
