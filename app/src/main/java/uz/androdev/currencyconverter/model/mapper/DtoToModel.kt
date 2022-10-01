@@ -5,6 +5,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import uz.androdev.currencyconverter.model.Currency
 import uz.androdev.currencyconverter.model.dto.CurrencyDto
 import uz.androdev.currencyconverter.util.Constants.NBU_API_DATE_FORMAT
+import uz.androdev.currencyconverter.util.Constants.NBU_CURRENCY_IMAGE_PATH_FORMAT
 
 /**
  * Created by: androdev
@@ -17,12 +18,17 @@ fun CurrencyDto.toCurrency(): Currency {
     val formatter = DateTimeFormatter.ofPattern(NBU_API_DATE_FORMAT)
     val date = LocalDate.parse(date, formatter)
 
+    val currencyImagePath = String.format(
+        NBU_CURRENCY_IMAGE_PATH_FORMAT, code
+    )
+
     return Currency(
         title = title,
         code = code,
         cbPrice = cbPrice.toFloat(),
         buyPrice = nbuBuyPrice.toFloatOrNull(),
         sellPrice = nbuCellPrice.toFloatOrNull(),
-        date = date
+        date = date,
+        currencyImagePath = currencyImagePath
     )
 }

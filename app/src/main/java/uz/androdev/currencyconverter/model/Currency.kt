@@ -15,5 +15,6 @@ data class Currency(
     val cbPrice: Float,
     val buyPrice: Float?,
     val sellPrice: Float?,
-    val date: LocalDate
+    val date: LocalDate,
+    val currencyImagePath: String
 )
