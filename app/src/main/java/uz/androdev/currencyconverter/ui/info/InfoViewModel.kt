@@ -3,8 +3,10 @@ package uz.androdev.currencyconverter.ui.info
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import uz.androdev.currencyconverter.domain.failure.GetCurrenciesUseCaseFailure
 import uz.androdev.currencyconverter.domain.response.UseCaseResponse
 import uz.androdev.currencyconverter.domain.usecase.GetCurrenciesUseCase
@@ -30,12 +32,16 @@ class InfoViewModel @Inject constructor(
     val uiState: StateFlow<UiState> = combine(
         queryState, currenciesState, failureToLoadState, loadingCurrenciesState
     ) { query, currencies, failureToLoad, loadingCurrencies ->
-        UiState(query = query,
-            failureToLoad = failureToLoad,
-            loadingCurrencies = loadingCurrencies,
-            currencies = currencies.filter {
-                it.title.contains(query)
-            })
+        withContext(Dispatchers.IO) {
+            UiState(query = query,
+                failureToLoad = failureToLoad,
+                loadingCurrencies = loadingCurrencies,
+                currencies = currencies.filter {
+                    it.title.lowercase().contains(query.lowercase()) ||
+                            it.code.lowercase().contains(query.lowercase())
+                }
+            )
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
