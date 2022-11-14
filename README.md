@@ -10,9 +10,9 @@ I used Android Studio for creating this app.
 # Architecture
 The architecture is Clean Architecture recommended by Google. 
 App consists of three layers:
-##### Data Layer
-##### Domain Layer
-##### UI Layer
+1. Data Layer
+2. Domain Layer
+3. UI Layer
 Navigation Component Jetpack Library has been used for app navigation.
 Ui layer is built using MVVM Architecture. App is SingleActivity app.
 For dependency injection, I used Hilt, which is recommended by Google.
