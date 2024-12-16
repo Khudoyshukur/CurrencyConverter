@@ -16,7 +16,7 @@ import uz.androdev.currencyconverter.util.Constants.NBU_CURRENCY_IMAGE_PATH_FORM
 
 fun CurrencyDto.toCurrency(): Currency {
     val formatter = DateTimeFormatter.ofPattern(NBU_API_DATE_FORMAT)
-    val date = LocalDate.parse(date, formatter)
+    val date = LocalDate.parse(date.take(NBU_API_DATE_FORMAT.length), formatter)
 
     val currencyImagePath = String.format(
         NBU_CURRENCY_IMAGE_PATH_FORMAT, code
