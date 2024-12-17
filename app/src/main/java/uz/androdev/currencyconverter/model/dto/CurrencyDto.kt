@@ -4,20 +4,20 @@ import com.google.gson.annotations.SerializedName
 
 data class CurrencyDto(
     @field:SerializedName("date")
-    val date: String,
+    val date: String? = null,
 
     @field:SerializedName("code")
-    val code: String,
+    val code: String? = null,
 
     @field:SerializedName("cb_price")
-    val cbPrice: String,
+    val cbPrice: String? = null,
 
     @field:SerializedName("title")
-    val title: String,
+    val title: String? = null,
 
     @field:SerializedName("nbu_buy_price")
-    val nbuBuyPrice: String,
+    val nbuBuyPrice: String? = null,
 
     @field:SerializedName("nbu_cell_price")
-    val nbuCellPrice: String
+    val nbuCellPrice: String? = null
 )

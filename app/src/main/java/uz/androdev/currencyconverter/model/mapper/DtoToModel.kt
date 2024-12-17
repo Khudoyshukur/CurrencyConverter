@@ -16,18 +16,22 @@ import uz.androdev.currencyconverter.util.Constants.NBU_CURRENCY_IMAGE_PATH_FORM
 
 fun CurrencyDto.toCurrency(): Currency {
     val formatter = DateTimeFormatter.ofPattern(NBU_API_DATE_FORMAT)
-    val date = LocalDate.parse(date.take(NBU_API_DATE_FORMAT.length), formatter)
+    val date = try {
+        LocalDate.parse(date!!.take(NBU_API_DATE_FORMAT.length), formatter)
+    } catch (e: Exception) {
+        LocalDate.now()
+    }
 
     val currencyImagePath = String.format(
         NBU_CURRENCY_IMAGE_PATH_FORMAT, code
     )
 
     return Currency(
-        title = title,
-        code = code,
-        cbPrice = cbPrice.toFloat(),
-        buyPrice = nbuBuyPrice.toFloatOrNull(),
-        sellPrice = nbuCellPrice.toFloatOrNull(),
+        title = title ?: "",
+        code = code ?: "",
+        cbPrice = cbPrice?.toFloatOrNull() ?: 0f,
+        buyPrice = nbuBuyPrice?.toFloatOrNull(),
+        sellPrice = nbuCellPrice?.toFloatOrNull(),
         date = date,
         currencyImagePath = currencyImagePath
     )
